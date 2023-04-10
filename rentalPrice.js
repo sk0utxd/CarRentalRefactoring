@@ -15,14 +15,15 @@ function calculateRentalPrice(age, licenseYears, carClass, hasRecentAccident, ha
       return "Drivers 21 y/o or less can only rent Class 1 vehicles";
   }
 
+  console.log(licenseYears);
+  if (licenseYears < 1) {
+    return "Driver must hold driving licence at least for one year. Can not rent a car!";
+  }
+
   let rentalPrice = age;
 
   if (carClass >= 4 && age <= MAX_AGE_FOR_DISCOUNTED_PRICE && isHighSeason) {
       rentalPrice *= 2;
-  }
-
-  if (licenseYears < 1) {
-      return "Driver must hold driving licence at least for one year. Can not rent a car!";
   }
 
   if (licenseYears < 3) {
@@ -37,6 +38,7 @@ function calculateRentalPrice(age, licenseYears, carClass, hasRecentAccident, ha
       return MAX_RENTAL_PRICE;
   }
 
+  rentalPrice = (Math.round(rentalPrice * 100) / 100).toString() + "eur/day";
   return rentalPrice;
 }
 

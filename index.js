@@ -18,7 +18,14 @@ const server = http.createServer(function (request, response) {
     request.on('end', function () {
       const post = qs.parse(body);
       console.log(post);
-      const result = rental.price(Number(post.age), Number(post.licence), Number(post.clazz), parseBool(post.acc), parseBool(post.acc2), parseBool(post.season));
+      const result = rental.calculateRentalPrice(
+        Number(post.age),
+        Number(post.licenseYears),
+        Number(post.carClass),
+        parseBool(post.hasRecentAccident),
+        parseBool(post.hasParticipatedInAccident),
+        parseBool(post.isHighSeason)
+      );
       console.log(result);
       response.writeHead(200, { 'Content-Type': 'text/html' });
       response.end('Result: ' + result);
@@ -26,20 +33,23 @@ const server = http.createServer(function (request, response) {
   } else {
     const html = `
       <html>
+        <head>
+            <meta charset="UTF-8">
+        </head>
         <body>
           <form id="calcForm" method="post" action="http://localhost:3000">
             Driver: <br>
             <input type="number" name="age"/>
             <label for="html">Your age?</label><br>
-            <input type="number" name="licence" />
+            <input type="number" name="licenseYears" />
             <label for="html">How long have you had your licence?</label><br>
-            <input type="number" name="clazz" />
+            <input type="number" name="carClass" />
             <label for="html">Class of the car (1 to 5)</label><br>
-            <input type=checkbox name="acc" />
+            <input type=checkbox name="hasRecentAccident" />
             <label for="html">Have you caused accidents?</label><br>
-            <input type=checkbox name="acc2" />
+            <input type=checkbox name="hasParticipatedInAccident" />
             <label for="html">Have you participated in any accidents?</label><br>
-            <input type=checkbox name="season" />
+            <input type=checkbox name="isHighSeason" />
             <label for="html">Is it high season?</label><br>
             <input type="submit" value="Add" />
           </form>
